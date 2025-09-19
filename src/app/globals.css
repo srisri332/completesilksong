@@ -29,7 +29,7 @@ body {
   letter-spacing: 0.05em;
 }
 
-.bg-silksong {
+.bg-silksong1 {
   background-color: #0a0a0a; /* deep fallback */
   background-image: radial-gradient(at 20% 30%, rgba(255, 111, 0, 0.5) 0px, transparent 60%),
     radial-gradient(at 80% 20%, rgba(255, 0, 0, 0.4) 0px, transparent 60%),
@@ -40,7 +40,7 @@ body {
   background-repeat: no-repeat;
 }
 
-.bg-silksong1 {
+.bg-silksong {
   background-color: #000; /* fallback */
   background-image: radial-gradient(
       ellipse at bottom,
