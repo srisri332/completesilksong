@@ -1,103 +1,220 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { categories, getTotalPercent } from "@/data/silksong";
+
+const COOKIE_KEY = "silksong_checked";
+const COOKIE_DAYS = 3650;
+
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()!.split(";").shift() || null;
+  return null;
+}
+
+function writeCookie(name: string, value: string, days: number): void {
+  if (typeof document === "undefined") return;
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Lax`;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const allIds = useMemo(
+    () => categories.flatMap((c) => c.items.map((i) => i.id)),
+    []
+  );
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const raw = readCookie(COOKIE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(raw)) as Record<
+          string,
+          boolean
+        >;
+        setChecked(parsed);
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const toSave: Record<string, boolean> = {};
+    for (const id of allIds) {
+      if (checked[id]) toSave[id] = true;
+    }
+    writeCookie(
+      COOKIE_KEY,
+      encodeURIComponent(JSON.stringify(toSave)),
+      COOKIE_DAYS
+    );
+  }, [checked, allIds]);
+
+  const totalPercent = useMemo(() => {
+    return categories
+      .flatMap((c) => c.items)
+      .reduce((acc, item) => (checked[item.id] ? acc + item.percent : acc), 0);
+  }, [checked]);
+
+  function toggle(id: string) {
+    setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  function resetAll() {
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Reset all progress? This cannot be undone."
+      );
+      if (!confirmed) return;
+    }
+    setChecked({});
+    writeCookie(
+      COOKIE_KEY,
+      encodeURIComponent(JSON.stringify({})),
+      COOKIE_DAYS
+    );
+  }
+
+  const maxPercent = getTotalPercent();
+  const progress = Math.min(100, Math.max(0, totalPercent));
+
+  return (
+    <main className='min-h-screen bg-silksong text-stone-100'>
+      <div className='mx-auto max-w-5xl px-4 py-8'>
+        <div className='mb-4 flex justify-center'>
+          <img
+            src='/hkss-logo.png'
+            alt='Silksong logo'
+            className='h-55 w-auto drop-shadow-[0_6px_20px_rgba(0,0,0,0.45)]'
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        <header className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
+          <div>
+            {/* <h1 className="text-2xl font-bold">Silksong Completion Checklist</h1> */}
+          </div>
+          <div className='hidden items-center gap-3 sm:flex' />
+        </header>
+
+        <section className='mb-8'>
+          <div className='mb-2 text-center'>
+            <p className='text-sm text-stone-400 italic'>
+              Note: This list is still being updated as more information becomes
+              available
+            </p>
+          </div>
+          <div className='mb-1 flex items-center justify-between'>
+            <span className='text-stone-300'>PROGRESS</span>
+            <div className='flex items-center gap-3'>
+              <span className='font-medium'>
+                {progress}%/{maxPercent}%
+              </span>
+              <button
+                onClick={resetAll}
+                className='rounded-md border border-[#ff4f56]/30 bg-[#ff4f56] px-3 py-1.5 text-xs text-stone-100 shadow-sm shadow-[#ff4f56]/30 hover:bg-stone-600'>
+                Reset
+              </button>
+            </div>
+          </div>
+          <div className='h-3 w-full rounded bg-stone-700'>
+            <div
+              className='h-3 rounded bg-[#ff4f56] transition-all'
+              style={{ width: `${(progress / maxPercent) * 100}%` }}
+            />
+          </div>
+        </section>
+
+        <div className='columns-1 md:columns-2 gap-6'>
+          {categories.map((cat) => {
+            const catTotal = cat.items.reduce((acc, it) => acc + it.percent, 0);
+            const catDone = cat.items.reduce(
+              (acc, it) => (checked[it.id] ? acc + it.percent : acc),
+              0
+            );
+            return (
+              <section
+                key={cat.id}
+                className='mb-6 break-inside-avoid rounded-lg border border-stone-700 bg-stone-900/50 shadow-md shadow-amber-900/30'>
+                <div className='flex items-center justify-between border-b border-stone-700 bg-stone-900/40 px-4 py-3'>
+                  <h2 className='text-lg font-semibold text-stone-100'>
+                    {cat.title}
+                  </h2>
+                  <span className='text-base text-amber-300'>
+                    {catDone} / {catTotal}%
+                  </span>
+                </div>
+                <ul className='divide-y divide-stone-700'>
+                  {cat.items.map((item) => (
+                    <li
+                      key={item.id}
+                      className='flex items-center gap-3 px-4 py-3 transition-colors hover:bg-stone-800/40'>
+                      <input
+                        id={item.id}
+                        type='checkbox'
+                        className='h-4 w-4 accent-[#ff4f56]'
+                        checked={!!checked[item.id]}
+                        onChange={() => toggle(item.id)}
+                      />
+                      <label
+                        htmlFor={item.id}
+                        className='flex-1 cursor-pointer select-none text-base'>
+                        {item.label}
+                      </label>
+                      <span className='text-xs text-stone-300'>
+                        +{item.percent}%
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      </div>
+
+      <footer
+        className='mt-16 border-t border-stone-700 bg-stone-900/30 py-8'
+        style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+        <div className='mx-auto max-w-5xl px-4 text-center text-xs text-stone-300'>
+          <p className='mb-2'>
+            This is a fan project; I am not affiliated with{" "}
+            <a
+              href='https://www.teamcherry.com.au/'
+              target='_blank'
+              rel='noreferrer'
+              className='text-[#ff4f56] hover:underline'>
+              Team Cherry
+            </a>
+            .
+          </p>
+          <p className='mb-4'>
+            Buy{" "}
+            <a
+              href='https://hollowknightsilksong.com/'
+              target='_blank'
+              rel='noreferrer'
+              className='text-[#ff4f56] hover:underline'>
+              Silk Song
+            </a>
+            , it&apos;s AWESOME.
+          </p>
+          <p className='text-xs text-stone-400'>
+            Inspired by{" "}
+            <a
+              className='underline hover:text-stone-300'
+              href='https://hollowknightchecklist.com/'
+              target='_blank'
+              rel='noreferrer'>
+              Hollow Knight Checklist
+            </a>
+          </p>
+        </div>
       </footer>
-    </div>
+    </main>
   );
 }
