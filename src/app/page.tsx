@@ -5,6 +5,7 @@ import { categories, getTotalPercent } from "@/data/silksong";
 
 const COOKIE_KEY = "silksong_checked";
 const COOKIE_DAYS = 3650;
+const BANNER_HIDDEN_KEY = "banner_hidden";
 
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -28,6 +29,7 @@ export default function Home() {
     []
   );
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [showBanner, setShowBanner] = useState(false); // Start as false to prevent flash
 
   useEffect(() => {
     const raw = readCookie(COOKIE_KEY);
@@ -42,6 +44,12 @@ export default function Home() {
         // ignore
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const bannerHidden = readCookie(BANNER_HIDDEN_KEY);
+    console.log('Banner hidden cookie value:', bannerHidden); // Debug log
+    setShowBanner(bannerHidden !== "true");
   }, []);
 
   useEffect(() => {
@@ -81,25 +89,68 @@ export default function Home() {
     );
   }
 
+  function hideBanner() {
+    setShowBanner(false);
+    writeCookie(BANNER_HIDDEN_KEY, "true", COOKIE_DAYS);
+  }
+
   const maxPercent = getTotalPercent();
   const progress = Math.min(100, Math.max(0, totalPercent));
 
   return (
-    <main className='min-h-screen bg-silksong text-stone-100'>
+    <>
+      {showBanner && (
+        <div className='w-full bg-stone-800 border-b border-stone-600 py-3 px-4'>
+          <div className='mx-auto max-w-5xl flex items-center justify-center gap-3'>
+            <p className='text-sm text-stone-200'>
+              This website uses cookies to remember your progress
+            </p>
+            <button
+              onClick={hideBanner}
+              className='rounded-md border border-blue-500 bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-700 transition-colors'
+            >
+              Hide
+            </button>
+          </div>
+        </div>
+      )}
+      <main className='min-h-screen bg-silksong text-stone-100'>
       <div className='mx-auto max-w-5xl px-4 py-8'>
         <div className='mb-4 flex justify-center'>
           <img
             src='/hkss-logo.png'
             alt='Silksong logo'
-            className='h-55 w-auto drop-shadow-[0_6px_20px_rgba(0,0,0,0.45)]'
+            className='h-45 w-auto drop-shadow-[0_6px_20px_rgba(0,0,0,0.45)]'
           />
         </div>
         <header className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
           <div>
-            {/* <h1 className="text-2xl font-bold">Silksong Completion Checklist</h1> */}
+            {/* <h1 className="text-2xl font-bold">Completion Checklist</h1> */}
           </div>
           <div className='hidden items-center gap-3 sm:flex' />
         </header>
+
+        <div className='mb-6 rounded-lg border border-stone-600 bg-stone-700/50 p-4'>
+          <p className='text-sm text-stone-200'>
+            To view your completion percentage in-game, you need to obtain{" "}
+            <a
+              href='https://hollowknightsilksong.wiki.fextralife.com/Farsight'
+              target='_blank'
+              rel='noreferrer'
+              className='text-[#ff4f56] hover:underline'>
+              Farsight
+            </a>{" "}
+            in{" "}
+            <a
+              href='https://www.ign.com/wikis/hollow-knight-silksong/How_to_Unlock_Act_3'
+              target='_blank'
+              rel='noreferrer'
+              className='text-[#ff4f56] hover:underline'>
+              Act3
+            </a>{" "}
+            from the Abyss.
+          </p>
+        </div>
 
         <section className='mb-8'>
           <div className='mb-2 text-center'>
@@ -163,7 +214,18 @@ export default function Home() {
                       <label
                         htmlFor={item.id}
                         className='flex-1 cursor-pointer select-none text-base'>
-                        {item.label}
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            target='_blank'
+                            rel='noreferrer'
+                            className='underline'
+                            onClick={(e) => e.stopPropagation()}>
+                            {item.label}
+                          </a>
+                        ) : (
+                          item.label
+                        )}
                       </label>
                       <span className='text-xs text-stone-300'>
                         +{item.percent}%
@@ -216,5 +278,6 @@ export default function Home() {
         </div>
       </footer>
     </main>
+    </>
   );
 }

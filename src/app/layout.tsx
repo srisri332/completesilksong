@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Silksong Completion Tracker",
+  title: "Silksong Completion Checklist",
   description: "A Hollow Knight: Silksong completion tracker",
   icons: {
     icon: "/hornet.png",
