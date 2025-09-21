@@ -102,33 +102,38 @@ export const categories: ChecklistCategory[] = [
 		id: "character-upgrades",
 		title: "CHARACTER UPGRADES",
 		items: [
-			// Mask Upgrades (5%)
-			{ id: "mask-1", label: "Mask Upgrade 1 (4 Mask Shards)", percent: 1 },
-			{ id: "mask-2", label: "Mask Upgrade 2 (4 Mask Shards)", percent: 1 },
-			{ id: "mask-3", label: "Mask Upgrade 3 (4 Mask Shards)", percent: 1 },
-			{ id: "mask-4", label: "Mask Upgrade 4 (4 Mask Shards)", percent: 1 },
-			{ id: "mask-5", label: "Mask Upgrade 5 (4 Mask Shards)", percent: 1 },
 
 			// Silk Spool Upgrades (9%)
-			{ id: "silk-1", label: "Silk Upgrade 1 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-2", label: "Silk Upgrade 2 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-3", label: "Silk Upgrade 3 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-4", label: "Silk Upgrade 4 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-5", label: "Silk Upgrade 5 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-6", label: "Silk Upgrade 6 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-7", label: "Silk Upgrade 7 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-8", label: "Silk Upgrade 8 (2 Spool Fragments)", percent: 1 },
-			{ id: "silk-9", label: "Silk Upgrade 9 (2 Spool Fragments)", percent: 1 },
+			{ id: "silk-1", label: "Silk Upgrade 1 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-2", label: "Silk Upgrade 2 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-3", label: "Silk Upgrade 3 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-4", label: "Silk Upgrade 4 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-5", label: "Silk Upgrade 5 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-6", label: "Silk Upgrade 6 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-7", label: "Silk Upgrade 7 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-8", label: "Silk Upgrade 8 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
+			{ id: "silk-9", label: "Silk Upgrade 9 (2 Spool Fragments)", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-spool-fragments-silk-upgrades-guide/2900-7006/" },
 
 			// Crafting & Pouch Upgrades (8%)
 			{ id: "craft-1", label: "Crafting Kit Upgrades (4 Total)", percent: 4, link: "https://hollowknightsilksong.wiki.fextralife.com/Crafting+Kit" },
 			{ id: "pouch-1", label: "Tool Pouch Upgrades (4 Total)", percent: 4, link: "https://hollowknightsilksong.wiki.fextralife.com/Tool+Pouch" },
 
 			// Needle Upgrades (4%)
-			{ id: "needle-1", label: "Needle → Sharpened Needle", percent: 1 },
-			{ id: "needle-2", label: "Sharpened → Shining Needle", percent: 1 },
-			{ id: "needle-3", label: "Shining → Hivesteel Needle", percent: 1 },
-			{ id: "needle-4", label: "Hivesteel → Pale Steel Needle", percent: 1 },
+			{ id: "needle-1", label: "Needle → Sharpened Needle", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-pale-oil-weapon-upgrade-guide/2900-7030/" },
+			{ id: "needle-2", label: "Sharpened → Shining Needle", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-pale-oil-weapon-upgrade-guide/2900-7030/" },
+			{ id: "needle-3", label: "Shining → Hivesteel Needle", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-pale-oil-weapon-upgrade-guide/2900-7030/" },
+			{ id: "needle-4", label: "Hivesteel → Pale Steel Needle", percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-pale-oil-weapon-upgrade-guide/2900-7030/" },
+		],
+	},
+	{
+		id: 'mask-upgrades',
+		title: 'MASKS',
+		items: [
+			{ id: 'mask-upgrade-1', label: 'Mask Upgrade 1  (4 Mask Shards)', percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-mask-shard-locations-guide/2900-6992/" },
+			{ id: 'mask-upgrade-2', label: 'Mask Upgrade 2  (4 Mask Shards)', percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-mask-shard-locations-guide/2900-6992/" },
+			{ id: 'mask-upgrade-3', label: 'Mask Upgrade 3  (4 Mask Shards)', percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-mask-shard-locations-guide/2900-6992/" },
+			{ id: 'mask-upgrade-4', label: 'Mask Upgrade 4  (4 Mask Shards)', percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-mask-shard-locations-guide/2900-6992/" },
+			{ id: 'mask-upgrade-5', label: 'Mask Upgrade 5  (4 Mask Shards)', percent: 1, link: "https://www.gamespot.com/gallery/hollow-knight-silksong-mask-shard-locations-guide/2900-6992/" },
 		],
 	},
 	{

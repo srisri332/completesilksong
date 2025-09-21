@@ -153,12 +153,12 @@ export default function Home() {
         </div>
 
         <section className='mb-8'>
-          <div className='mb-2 text-center'>
+          {/* <div className='mb-2 text-center'>
             <p className='text-sm text-stone-400 italic'>
               Note: This list is still being updated as more information becomes
               available
             </p>
-          </div>
+          </div> */}
           <div className='mb-1 flex items-center justify-between'>
             <span className='text-stone-300'>PROGRESS</span>
             <div className='flex items-center gap-3'>
@@ -243,6 +243,16 @@ export default function Home() {
         className='mt-16 border-t border-stone-700 bg-stone-900/30 py-8'
         style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
         <div className='mx-auto max-w-5xl px-4 text-center text-xs text-stone-300'>
+          <p className="mb-2">
+            This information has been taken from {" "}
+            <a href="https://hollowknight.wiki/w/Completion_(Silksong)" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-[#ff4f56] hover:underline">
+              Hollow Knight Wiki
+            </a>
+            .
+          </p>
           <p className='mb-2'>
             This is a fan project; I am not affiliated with{" "}
             <a
