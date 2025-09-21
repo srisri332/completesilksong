@@ -244,7 +244,7 @@ export default function Home() {
         style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
         <div className='mx-auto max-w-5xl px-4 text-center text-xs text-stone-300'>
           <p className="mb-2">
-            This information has been taken from {" "}
+            This information has been sourced from {" "}
             <a href="https://hollowknight.wiki/w/Completion_(Silksong)" 
               target="_blank" 
               rel="noreferrer" 
