@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { bosses } from "@/data/silksong";
 
 const BOSS_COOKIE_KEY = "silksong_bosses_checked";
@@ -29,7 +30,10 @@ export default function BossesPage() {
     const raw = readCookie(BOSS_COOKIE_KEY);
     if (raw) {
       try {
-        const parsed = JSON.parse(decodeURIComponent(raw)) as Record<string, boolean>;
+        const parsed = JSON.parse(decodeURIComponent(raw)) as Record<
+          string,
+          boolean
+        >;
         setBossChecked(parsed);
       } catch {
         // ignore
@@ -87,12 +91,11 @@ export default function BossesPage() {
 
         <header className='mb-6 flex items-center justify-between'>
           <h1 className='text-2xl font-semibold'>Bosses List</h1>
-          <a
+          <Link
             href='/'
-            className='text-sm text-[#ff4f56] underline hover:no-underline'
-          >
+            className='text-sm text-[#ff4f56] underline hover:no-underline'>
             Back to Checklist
-          </a>
+          </Link>
         </header>
 
         <section className='mb-8'>
@@ -154,5 +157,3 @@ export default function BossesPage() {
     </main>
   );
 }
-
-
