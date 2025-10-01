@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { categories, getTotalPercent } from "@/data/silksong";
+import { categories, getTotalPercent, bosses } from "@/data/silksong";
 
 const COOKIE_KEY = "silksong_checked";
 const COOKIE_DAYS = 365;
 const BANNER_HIDDEN_KEY = "banner_hidden";
+const BOSS_COOKIE_KEY = "silksong_bosses_checked";
 
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -30,6 +31,7 @@ export default function Home() {
   );
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [showBanner, setShowBanner] = useState(false); // Start as false to prevent flash
+  const [bossChecked, setBossChecked] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const raw = readCookie(COOKIE_KEY);
@@ -40,6 +42,18 @@ export default function Home() {
           boolean
         >;
         setChecked(parsed);
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const raw = readCookie(BOSS_COOKIE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(raw)) as Record<string, boolean>;
+        setBossChecked(parsed);
       } catch {
         // ignore
       }
@@ -63,6 +77,19 @@ export default function Home() {
       COOKIE_DAYS
     );
   }, [checked, allIds]);
+
+  useEffect(() => {
+    const allBossNames = bosses.map((b) => b.name);
+    const toSave: Record<string, boolean> = {};
+    for (const name of allBossNames) {
+      if (bossChecked[name]) toSave[name] = true;
+    }
+    writeCookie(
+      BOSS_COOKIE_KEY,
+      encodeURIComponent(JSON.stringify(toSave)),
+      COOKIE_DAYS
+    );
+  }, [bossChecked]);
 
   const totalPercent = useMemo(() => {
     return categories
@@ -89,6 +116,25 @@ export default function Home() {
     );
   }
 
+  function toggleBoss(name: string) {
+    setBossChecked((prev) => ({ ...prev, [name]: !prev[name] }));
+  }
+
+  function resetBosses() {
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Reset bosses progress? This cannot be undone."
+      );
+      if (!confirmed) return;
+    }
+    setBossChecked({});
+    writeCookie(
+      BOSS_COOKIE_KEY,
+      encodeURIComponent(JSON.stringify({})),
+      COOKIE_DAYS
+    );
+  }
+
   function hideBanner() {
     setShowBanner(false);
     writeCookie(BANNER_HIDDEN_KEY, "true", COOKIE_DAYS);
@@ -96,6 +142,12 @@ export default function Home() {
 
   const maxPercent = getTotalPercent();
   const progress = Math.min(100, Math.max(0, totalPercent));
+  const bossTotalCount = bosses.length;
+  const bossCheckedCount = useMemo(() => {
+    return bosses.reduce((acc, b) => (bossChecked[b.name] ? acc + 1 : acc), 0);
+  }, [bossChecked]);
+
+  const [activeTab, setActiveTab] = useState<"ingame" | "bosses">("ingame");
 
   return (
     <>
@@ -130,6 +182,23 @@ export default function Home() {
           <div className='hidden items-center gap-3 sm:flex' />
         </header>
 
+        {/* Tabs */}
+        <div className='mb-6 flex items-center gap-2'>
+          <button
+            onClick={() => setActiveTab("ingame")}
+            className={`${activeTab === "ingame" ? "bg-[#ff4f56] text-stone-100" : "bg-stone-800 text-stone-200 hover:bg-stone-700"} rounded-md border border-stone-600 px-3 py-1.5 text-sm transition-colors cursor-pointer`}
+          >
+            100% In-Game
+          </button>
+          <button
+            onClick={() => setActiveTab("bosses")}
+            className={`${activeTab === "bosses" ? "bg-[#ff4f56] text-stone-100" : "bg-stone-800 text-stone-200 hover:bg-stone-700"} rounded-md border border-stone-600 px-3 py-1.5 text-sm transition-colors cursor-pointer`}
+          >
+            Bosses
+          </button>
+        </div>
+
+        {activeTab === "ingame" && (
         <div className='mb-6 rounded-lg border border-stone-600 bg-stone-700/50 p-4'>
           <p className='text-sm text-stone-200'>
             To view your completion percentage in-game, you need to obtain{" "}
@@ -151,7 +220,9 @@ export default function Home() {
             from the Abyss.
           </p>
         </div>
+        )}
 
+        {activeTab === "ingame" && (
         <section className='mb-8'>
           {/* <div className='mb-2 text-center'>
             <p className='text-sm text-stone-400 italic'>
@@ -167,7 +238,7 @@ export default function Home() {
               </span>
               <button
                 onClick={resetAll}
-                className='rounded-md border border-[#ff4f56]/30 bg-[#ff4f56] px-3 py-1.5 text-xs text-stone-100 shadow-sm shadow-[#ff4f56]/30 hover:bg-stone-600'>
+                className='rounded-md border border-[#ff4f56]/30 bg-[#ff4f56] px-3 py-1.5 text-xs text-stone-100 shadow-sm shadow-[#ff4f56]/30 hover:bg-stone-600 cursor-pointer'>
                 Reset
               </button>
             </div>
@@ -179,7 +250,9 @@ export default function Home() {
             />
           </div>
         </section>
+        )}
 
+        {activeTab === "ingame" && (
         <div className='columns-1 md:columns-2 gap-6'>
           {categories.map((cat) => {
             const catTotal = cat.items.reduce((acc, it) => acc + it.percent, 0);
@@ -237,6 +310,74 @@ export default function Home() {
             );
           })}
         </div>
+        )}
+
+    {activeTab === "bosses" && (
+        <div className='mb-6 rounded-lg border border-stone-600 bg-stone-700/50 p-4'>
+          <p className='text-sm text-stone-200'>
+            Not all bosses are required to achieve 100% completion.
+          </p>
+        </div>
+        )}
+
+        {activeTab === "bosses" && (
+          <>
+            <section className='mt-4 mb-8'>
+              <div className='mb-1 flex items-center justify-between'>
+                <span className='text-stone-300'>PROGRESS</span>
+                <div className='flex items-center gap-3'>
+                  <span className='font-medium'>
+                    {bossCheckedCount}/{bossTotalCount}
+                  </span>
+                  <button
+                    onClick={resetBosses}
+                    className='rounded-md border border-[#ff4f56]/30 bg-[#ff4f56] px-3 py-1.5 text-xs text-stone-100 shadow-sm shadow-[#ff4f56]/30 hover:bg-stone-600 cursor-pointer'>
+                    Reset
+                  </button>
+                </div>
+              </div>
+              <div className='h-3 w-full rounded bg-stone-700'>
+                <div
+                  className='h-3 rounded bg-[#ff4f56] transition-all'
+                  style={{ width: `${(bossCheckedCount / bossTotalCount) * 100}%` }}
+                />
+              </div>
+            </section>
+            <section className='rounded-lg border border-stone-700 bg-stone-900/50'>
+              <ul className='divide-y divide-stone-700'>
+                {bosses.map((b) => (
+                  <li
+                    key={b.name}
+                    className='flex items-center gap-3 px-4 py-3 transition-colors hover:bg-stone-800/40'>
+                    <input
+                      id={`boss-${b.name}`}
+                      type='checkbox'
+                      className='h-4 w-4 accent-[#ff4f56]'
+                      checked={!!bossChecked[b.name]}
+                      onChange={() => toggleBoss(b.name)}
+                    />
+                    <label
+                      htmlFor={`boss-${b.name}`}
+                      className='flex-1 cursor-pointer select-none text-base'>
+                      {b.link ? (
+                        <a
+                          href={b.link}
+                          target='_blank'
+                          rel='noreferrer'
+                          className='underline'
+                          onClick={(e) => e.stopPropagation()}>
+                          {b.name}
+                        </a>
+                      ) : (
+                        b.name
+                      )}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </>
+        )}
       </div>
 
       <footer
