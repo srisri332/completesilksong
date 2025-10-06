@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { bosses } from "@/data/silksong";
+import Image from "next/image";
 
 const BOSS_COOKIE_KEY = "silksong_bosses_checked";
 const COOKIE_DAYS = 365;
@@ -82,10 +83,13 @@ export default function BossesPage() {
     <main className='min-h-screen bg-silksong text-stone-100'>
       <div className='mx-auto max-w-5xl px-4 py-8'>
         <div className='mb-4 flex justify-center'>
-          <img
+          <Image
             src='/hkss-logo.png'
             alt='Silksong logo'
+            width={180}
+            height={45}
             className='h-45 w-auto drop-shadow-[0_6px_20px_rgba(0,0,0,0.45)]'
+            priority
           />
         </div>
 
