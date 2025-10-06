@@ -1,13 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { categories, getTotalPercent, bosses } from "@/data/silksong";
+import {
+  categories,
+  getTotalPercent,
+  bosses,
+  MemoryLockets,
+} from "@/data/silksong";
 import Image from "next/image";
 
 const COOKIE_KEY = "silksong_checked";
 const COOKIE_DAYS = 365;
 const BANNER_HIDDEN_KEY = "banner_hidden";
 const BOSS_COOKIE_KEY = "silksong_bosses_checked";
+const MEMORY_LOCKET_COOKIE_KEY = "silksong_memorylockets_checked";
 
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -33,6 +39,13 @@ export default function Home() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [showBanner, setShowBanner] = useState(false); // Start as false to prevent flash
   const [bossChecked, setBossChecked] = useState<Record<string, boolean>>({});
+  const [memoryLocketChecked, setMemoryLocketChecked] = useState<
+    Record<string, boolean>
+  >({});
+
+  function toggleMemoryLocket(id: string) {
+    setMemoryLocketChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
 
   useEffect(() => {
     const raw = readCookie(COOKIE_KEY);
@@ -65,10 +78,60 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const raw = readCookie(MEMORY_LOCKET_COOKIE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(raw)) as Record<
+          string,
+          boolean
+        >;
+        setMemoryLocketChecked(parsed);
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const bannerHidden = readCookie(BANNER_HIDDEN_KEY);
-    console.log("Banner hidden cookie value:", bannerHidden); // Debug log
     setShowBanner(bannerHidden !== "true");
   }, []);
+
+  useEffect(() => {
+    const allMemoryLocketIds = MemoryLockets.map((item) => item.id);
+    const toSave: Record<string, boolean> = {};
+    for (const id of allMemoryLocketIds) {
+      if (memoryLocketChecked[id]) toSave[id] = true;
+    }
+    writeCookie(
+      MEMORY_LOCKET_COOKIE_KEY,
+      encodeURIComponent(JSON.stringify(toSave)),
+      COOKIE_DAYS
+    );
+  }, [memoryLocketChecked]);
+
+  const memoryLocketTotalCount = MemoryLockets.length;
+  const memoryLocketCheckedCount = useMemo(() => {
+    return MemoryLockets.reduce(
+      (acc, item) => (memoryLocketChecked[item.id] ? acc + 1 : acc),
+      0
+    );
+  }, [memoryLocketChecked]);
+
+  function resetMemoryLockets() {
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm(
+        "Reset Memory Lockets progress? This cannot be undone."
+      );
+      if (!confirmed) return;
+    }
+    setMemoryLocketChecked({});
+    writeCookie(
+      MEMORY_LOCKET_COOKIE_KEY,
+      encodeURIComponent(JSON.stringify({})),
+      COOKIE_DAYS
+    );
+  }
 
   useEffect(() => {
     const toSave: Record<string, boolean> = {};
@@ -108,7 +171,7 @@ export default function Home() {
   function resetAll() {
     if (typeof window !== "undefined") {
       const confirmed = window.confirm(
-        "Reset all progress? This cannot be undone."
+        "Reset completion progress? This cannot be undone."
       );
       if (!confirmed) return;
     }
@@ -151,7 +214,9 @@ export default function Home() {
     return bosses.reduce((acc, b) => (bossChecked[b.name] ? acc + 1 : acc), 0);
   }, [bossChecked]);
 
-  const [activeTab, setActiveTab] = useState<"ingame" | "bosses">("ingame");
+  const [activeTab, setActiveTab] = useState<
+    "ingame" | "bosses" | "memorylockets"
+  >("ingame");
 
   return (
     <>
@@ -197,6 +262,15 @@ export default function Home() {
                   : "bg-stone-800 text-stone-200 hover:bg-stone-700"
               } rounded-md border border-stone-600 px-3 py-1.5 text-sm transition-colors cursor-pointer`}>
               100% In-Game
+            </button>
+            <button
+              onClick={() => setActiveTab("memorylockets")}
+              className={`${
+                activeTab === "memorylockets"
+                  ? "bg-[#ff4f56] text-stone-100"
+                  : "bg-stone-800 text-stone-200 hover:bg-stone-700"
+              } rounded-md border border-stone-600 px-3 py-1.5 text-sm transition-colors cursor-pointer`}>
+              Memory Lockets
             </button>
             <button
               onClick={() => setActiveTab("bosses")}
@@ -265,6 +339,7 @@ export default function Home() {
 
           {activeTab === "ingame" && (
             <div className='columns-1 md:columns-2 gap-6'>
+              {/* Checklist categories */}
               {categories.map((cat) => {
                 const catTotal = cat.items.reduce(
                   (acc, it) => acc + it.percent,
@@ -386,6 +461,75 @@ export default function Home() {
                           </a>
                         ) : (
                           b.name
+                        )}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </>
+          )}
+
+          {activeTab === "memorylockets" && (
+            <>
+              <section className='mb-6'>
+                <div className='mb-1 flex items-center justify-between'>
+                  <span className='text-stone-300'>PROGRESS</span>
+                  <div className='flex items-center gap-3'>
+                    <span className='font-medium'>
+                      {memoryLocketCheckedCount}/{memoryLocketTotalCount}
+                    </span>
+                    <button
+                      onClick={resetMemoryLockets}
+                      className='rounded-md border border-[#ff4f56]/30 bg-[#ff4f56] px-3 py-1.5 text-xs text-stone-100 shadow-sm shadow-[#ff4f56]/30 hover:bg-stone-600 cursor-pointer'>
+                      Reset
+                    </button>
+                  </div>
+                </div>
+                <div className='h-3 w-full rounded bg-stone-700'>
+                  <div
+                    className='h-3 rounded bg-[#ff4f56] transition-all'
+                    style={{
+                      width: `${
+                        (memoryLocketCheckedCount / memoryLocketTotalCount) *
+                        100
+                      }%`,
+                    }}
+                  />
+                </div>
+              </section>
+              <section className='break-inside-avoid rounded-lg border border-stone-700 bg-stone-900/50 shadow-md shadow-amber-900/30'>
+                <div className='flex items-center border-b border-stone-700 bg-stone-900/40 px-4 py-3'>
+                  <h2 className='text-lg font-semibold text-stone-100'>
+                    MEMORY LOCKETS
+                  </h2>
+                </div>
+                <ul className='divide-y divide-stone-700'>
+                  {MemoryLockets.map((item) => (
+                    <li
+                      key={item.id}
+                      className='flex items-center gap-3 px-4 py-3 transition-colors hover:bg-stone-800/40'>
+                      <input
+                        id={item.id}
+                        type='checkbox'
+                        className='h-4 w-4 accent-[#ff4f56]'
+                        checked={!!memoryLocketChecked[item.id]}
+                        onChange={() => toggleMemoryLocket(item.id)}
+                      />
+                      <label
+                        htmlFor={item.id}
+                        className='flex-1 cursor-pointer select-none text-base'>
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            target='_blank'
+                            rel='noreferrer'
+                            className='underline'
+                            onClick={(e) => e.stopPropagation()}>
+                            {item.label}
+                          </a>
+                        ) : (
+                          item.label
                         )}
                       </label>
                     </li>

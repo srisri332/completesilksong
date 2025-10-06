@@ -17,6 +17,13 @@ export type Boss = {
   link?: string;
 };
 
+export type MemoryLocket = {
+  id: string;
+  label: string;
+  percent?: number;
+  link?: string;
+};
+
 // Hollow Knight: Silksong checklist data
 // Source inspiration: `https://hollowknightchecklist.com/` (Hollow Knight). This is a fan checklist.
 // Percentages are provided by the user request and may not sum to exactly 100.
@@ -806,6 +813,7 @@ export const categories: ChecklistCategory[] = [
       },
     ],
   },
+
   {
     id: "misc",
     title: "MISCELLANEOUS",
@@ -936,5 +944,128 @@ export const bosses: Boss[] = [
   {
     name: "Grand Mother Silk",
     link: "https://hollowknight.wiki/w/Grand_Mother_Silk",
+  },
+];
+
+export const MemoryLockets: MemoryLocket[] = [
+  {
+    id: "memory-locket-1",
+    label: "#1 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#bone-bottom-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-2",
+    label: "#2 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#the-marrow-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-3",
+    label: "#3 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#wormways-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-4",
+    label: "#4 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#deep-docks-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-5",
+    label: "#5 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#far-fields-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-6",
+    label: "#6 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#far-fields-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-7",
+    label: "#7 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#hunter-39-s-march-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-8",
+    label: "#8 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#greymoor-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-9",
+    label: "#9 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#greymoor-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-10",
+    label: "#10 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#bellhart-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-11",
+    label: "#11 Memory Locket (Act 3)",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#bellhart-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-12",
+    label: "#12 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#blasted-steps-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-13",
+    label: "#13 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#sands-of-karak-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-14",
+    label: "#14 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#the-slab-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-15",
+    label: "#15 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#underworks-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-16",
+    label: "#16 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#choral-chambers-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-17",
+    label: "#17 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#whispering-vaults-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-18",
+    label: "#18 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#memorium-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-19",
+    label: "#19 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#bilewater-memory-lockets-in-silksong",
+  },
+  {
+    id: "memory-locket-20",
+    label: "#20 Memory Locket",
+    percent: 0,
+    link: "https://gamerant.com/silksong-memory-locket-locations-where-all-hollow-knight/#bilewater-memory-lockets-in-silksong",
   },
 ];
