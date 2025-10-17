@@ -316,7 +316,9 @@ export default function Home() {
             </p>
           </div> */}
               <div className='mb-1 flex items-center justify-between'>
-                <span className='text-stone-300'>PROGRESS</span>
+                <h1>
+                  <span className='text-stone-300'>PROGRESS</span>
+                </h1>
                 <div className='flex items-center gap-3'>
                   <span className='font-medium'>
                     {progress}%/{maxPercent}%
