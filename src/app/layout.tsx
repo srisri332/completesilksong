@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Silksong Completion Checklists",
   description:
-    "The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with our interactive progress tracker.",
+    "The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with interactive progress tracker.",
   metadataBase: new URL("https://silksongchecklists.com"),
   alternates: {
     canonical: "https://silksongchecklists.com",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Silksong Completion Checklists",
     description:
-      "The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with our interactive progress tracker.",
+      "The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with interactive progress tracker.",
     url: "https://silksongchecklists.com",
     siteName: "Silksong Checklists",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Silksong Completion Checklists",
     description:
-      "The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with our interactive progress tracker.",
+      "The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with interactive progress tracker.",
     images: ["https://silksongchecklists.com/preview.png"],
   },
   icons: {
@@ -67,6 +67,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        <meta
+          name='description'
+          content='The ultimate Hollow Knight: Silksong 100% completion checklist. Track every skill, mask, and upgrade with interactive progress tracker.'></meta>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Google Analytics */}

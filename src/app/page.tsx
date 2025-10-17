@@ -278,7 +278,7 @@ export default function Home() {
                 activeTab === "bosses"
                   ? "bg-[#ff4f56] text-stone-100"
                   : "bg-stone-800 text-stone-200 hover:bg-stone-700"
-              } rounded-md border border-stone-600 px-3 py-1.5 text-sm transition-colors cursor-pointer`}>
+              } rounded-md border border-stone-600 px-3 py-4 sm:py-1.5 text-sm transition-colors cursor-pointer`}>
               Bosses
             </button>
           </div>
